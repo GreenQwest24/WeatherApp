@@ -49,7 +49,7 @@ namespace WeattherApp2
                 //var request = new RestRequest();
                 var request = new RestRequest();
                 request.AddParameter("q", cityName);
-                request.AddParameter("appid", "494acaff65dcc86fed1a3c6af8b21415Y"); // Replace with your OpenWeatherMap API key
+                request.AddParameter("appid", "494acaff65dcc86fed1a3c6af8b21415"); // Replace with your OpenWeatherMap API key
                 request.AddParameter("units", "metric");
 
                 //Store the generated API from the biller portal

@@ -46,6 +46,7 @@
             this.btnGetWeather.TabIndex = 0;
             this.btnGetWeather.Text = "GetWeather";
             this.btnGetWeather.UseVisualStyleBackColor = true;
+            this.btnGetWeather.Click += new System.EventHandler(this.btnGetWeather_Click);
             // 
             // lblTemp
             // 

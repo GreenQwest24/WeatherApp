@@ -53,9 +53,7 @@ namespace WeattherApp2
                 request.AddParameter("units", "metric");
 
                 //Store the generated API from the biller portal
-                //String GeneratedAPIKey = "494acaff65dcc86fed1a3c6af8b21415Y";
-
-
+                
                 RestResponse response = client.Execute(request);
                 if (response.IsSuccessful)
                 {

@@ -34,7 +34,7 @@ namespace WeattherApp2
 
         private void btnGetWeather_Click(object sender, EventArgs e)
         {
-            string cityName = txtCityName.Text;
+            string cityName = textBox_CityName.Text;
             FetchWeather(cityName);
         }
 
@@ -53,7 +53,7 @@ namespace WeattherApp2
                 request.AddParameter("units", "metric");
 
                 //Store the generated API from the biller portal
-                
+
                 RestResponse response = client.Execute(request);
                 if (response.IsSuccessful)
                 {
@@ -61,9 +61,14 @@ namespace WeattherApp2
 
                     string weatherDescription = (string)data["weather"][0]["description"];
                     double tempCelsius = (double)data["main"]["temp"];
-
+                    // F=  5/9 × C + 32
+                    double tempFahrenheit = .55 * tempCelsius + 32;
                     lblTemp.Text = $"{tempCelsius} °C";
-                    lblDescription.Text = weatherDescription;
+                    //string formatted = $"{number:0.00}";
+                    string formatted = $"{tempFahrenheit: 0.00}";
+                    MessageBox.Show($"{formatted} °F");
+                    label_TempF.Text = $"{formatted} °F";
+                    label_WeatherDescription.Text = weatherDescription;
                     UpdateBackground(weatherDescription);
                 }
                 else
@@ -72,12 +77,12 @@ namespace WeattherApp2
                 }
             }
 
+
             catch (WebException ex)
             {
                 MessageBox.Show("Error: Network unreachable or invalid city name");
             }
         }
-
         private void UpdateBackground(string weatherDescription)
         {
             switch (weatherDescription.ToLower())
@@ -108,5 +113,7 @@ private void Form1_Load(object sender, EventArgs e)
         {
 
         }
+
+       
     }
 }

@@ -12,6 +12,8 @@ using RestSharp;
 using System.Xml.Linq;
 using Newtonsoft.Json.Linq;
 using RestSharp.Authenticators;
+using System.Speech.Recognition;
+using System.Speech.Synthesis;
 
 
 namespace WeattherApp2
@@ -19,6 +21,10 @@ namespace WeattherApp2
     public partial class From1 : Form
     {
         private const string API_BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
+        private SpeechRecognitionEngine recognizer;
+        private SpeechSynthesizer synthesizer;
+
+
 
 
 
@@ -28,6 +34,44 @@ namespace WeattherApp2
 
             InitializeComponent();
             SetClearBackground(); // Set initial clear background
+
+            // Initialize speech recognition and synthesis
+            recognizer = new SpeechRecognitionEngine();
+            synthesizer = new SpeechSynthesizer();
+
+            // Configure speech recognition
+            ConfigureSpeechRecognition();
+
+            // Handle recognized speech
+            recognizer.SpeechRecognized += Recognizer_SpeechRecognized;
+        }
+
+        private void ConfigureSpeechRecognition()
+        {
+            // Create a grammar for recognizing weather commands
+            Choices commands = new Choices(new string[] { "weather in", "temperature in", "forecast for" });
+            GrammarBuilder grammarBuilder = new GrammarBuilder();
+            grammarBuilder.Append(commands);
+            Grammar grammar = new Grammar(grammarBuilder);
+
+            // Load the grammar into the recognizer
+            recognizer.LoadGrammar(grammar);
+
+            // Set input to the default audio device
+            recognizer.SetInputToDefaultAudioDevice();
+        }
+
+        private void Recognizer_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
+        {
+            // Handle recognized speech here
+            string command = e.Result.Text;
+            Console.WriteLine("Recognized command: " + command);
+
+            // Extract the city name from the recognized command
+            string cityName = command.Replace("weather in", "").Trim();
+
+            // Fetch weather based on the recognized city name
+            FetchWeather(cityName);
         }
 
 
@@ -70,6 +114,9 @@ namespace WeattherApp2
                     label_TempF.Text = $"{formatted} °F";
                     label_WeatherDescription.Text = weatherDescription;
                     UpdateBackground(weatherDescription);
+
+                    // Speak the weather information
+                    Speak($"Current weather in {cityName}:{tempFahrenheit} degrees Fahrenheit, {tempCelsius} degrees Celsius, {weatherDescription}");
                 }
                 else
                 {
@@ -83,6 +130,13 @@ namespace WeattherApp2
                 MessageBox.Show("Error: Network unreachable or invalid city name");
             }
         }
+
+        private void Speak(string text)
+        {
+            // Speak the provided text
+            synthesizer.SpeakAsync(text);
+        }
+
         private void UpdateBackground(string weatherDescription)
         {
             switch (weatherDescription.ToLower())
@@ -111,9 +165,19 @@ namespace WeattherApp2
 
 private void Form1_Load(object sender, EventArgs e)
         {
+            // Start listening for voice commands when the form loads
+            recognizer.RecognizeAsync(RecognizeMode.Multiple);
+            Console.WriteLine("Listening for commands...");
 
         }
 
-       
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            recognizer.Dispose();
+            synthesizer.Dispose();
+        }
+
+
     }
 }

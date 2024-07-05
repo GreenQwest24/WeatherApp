@@ -39,6 +39,7 @@
             this.label_WeatherDescription = new System.Windows.Forms.Label();
             this.label_TempF = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label_Sunrise = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.panel1.SuspendLayout();
@@ -50,7 +51,7 @@
                 | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGetWeather.Location = new System.Drawing.Point(59, 325);
             this.btnGetWeather.Name = "btnGetWeather";
-            this.btnGetWeather.Size = new System.Drawing.Size(201, 82);
+            this.btnGetWeather.Size = new System.Drawing.Size(201, 47);
             this.btnGetWeather.TabIndex = 0;
             this.btnGetWeather.Text = "GetWeather";
             this.btnGetWeather.UseVisualStyleBackColor = true;
@@ -131,13 +132,23 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.label_Sunrise);
             this.panel1.Controls.Add(this.label_WeatherDescription);
             this.panel1.Controls.Add(this.label_TempF);
             this.panel1.Controls.Add(this.lblTemp);
             this.panel1.Location = new System.Drawing.Point(27, 24);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(200, 112);
+            this.panel1.Size = new System.Drawing.Size(200, 146);
             this.panel1.TabIndex = 6;
+            // 
+            // label_Sunrise
+            // 
+            this.label_Sunrise.AutoSize = true;
+            this.label_Sunrise.Location = new System.Drawing.Point(3, 110);
+            this.label_Sunrise.Name = "label_Sunrise";
+            this.label_Sunrise.Size = new System.Drawing.Size(63, 20);
+            this.label_Sunrise.TabIndex = 6;
+            this.label_Sunrise.Text = "Sunrise";
             // 
             // From1
             // 
@@ -172,6 +183,7 @@
         private System.Windows.Forms.Label label_WeatherDescription;
         private System.Windows.Forms.Label label_TempF;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label_Sunrise;
     }
 }
 

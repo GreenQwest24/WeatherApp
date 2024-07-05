@@ -80,6 +80,7 @@ namespace WeattherApp2
         {
             string cityName = textBox_CityName.Text;
             FetchWeather(cityName);
+            FetchSunriseTime(cityName);
         }
 
 
@@ -105,12 +106,12 @@ namespace WeattherApp2
 
                     string weatherDescription = (string)data["weather"][0]["description"];
                     double tempCelsius = (double)data["main"]["temp"];
-                    // F=  5/9 × C + 32
-                    double tempFahrenheit = .55 * tempCelsius + 32;
+                    // F=  9/5 × C + 32
+                    double tempFahrenheit = 1.8 * tempCelsius + 32;
                     lblTemp.Text = $"{tempCelsius} °C";
                     //string formatted = $"{number:0.00}";
                     string formatted = $"{tempFahrenheit: 0.00}";
-                    MessageBox.Show($"{formatted} °F");
+                    //MessageBox.Show($"{formatted} °F");
                     label_TempF.Text = $"{formatted} °F";
                     label_WeatherDescription.Text = weatherDescription;
                     UpdateBackground(weatherDescription);
@@ -131,7 +132,52 @@ namespace WeattherApp2
             }
         }
 
-        private void Speak(string text)
+
+        private void FetchSunriseTime(string cityName)
+        {
+            try
+            {
+                var client = new RestClient("https://api.openweathermap.org/data/2.5/weather");
+
+                var request = new RestRequest();
+                request.AddParameter("q", cityName);
+                request.AddParameter("appid", "494acaff65dcc86fed1a3c6af8b21415"); // Replace with your OpenWeatherMap API key
+
+                RestResponse response = client.Execute(request);
+                if (response.IsSuccessful)
+                {
+                    JObject data = JObject.Parse(response.Content);
+
+                    // Extract sunrise time (in UTC seconds since Unix epoch)
+                    long sunriseUnix = (long)data["sys"]["sunrise"];
+
+                    // Convert Unix timestamp to DateTime
+
+                    // Convert Unix timestamp to DateTime
+                    DateTime sunriseDateTime = DateTimeOffset.FromUnixTimeSeconds(sunriseUnix).DateTime;
+
+
+
+
+
+                    MessageBox.Show($"Sunrise time in {cityName}: {sunriseDateTime.ToShortTimeString()}");
+
+                    // Optionally, update your UI to display the sunrise time
+                    label_Sunrise.Text = $"Sunrise: {sunriseDateTime.ToShortTimeString()}";
+                }
+                else
+                {
+                    MessageBox.Show($"Error fetching weather data: {response.StatusCode}");
+                }
+            }
+            catch (WebException ex)
+            {
+                MessageBox.Show("Error: Network unreachable or invalid city name");
+            }
+        }
+
+
+         private void Speak(string text)
         {
             // Speak the provided text
             synthesizer.SpeakAsync(text);
